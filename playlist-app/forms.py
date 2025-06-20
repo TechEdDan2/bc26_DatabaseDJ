@@ -30,5 +30,5 @@ class SongForm(FlaskForm):
 class NewSongForPlaylistForm(FlaskForm):
     """Form for adding a song to playlist."""
 
-    playList = SelectField('Choose Playlist', choices=[], validators=[InputRequired()])
-    song = SelectField('Choose Song', choices=[], validators=[InputRequired()])
+    # playList = SelectField('Choose Playlist', choices=[], coerce=int, validators=[InputRequired()])
+    song = SelectField('Choose Song', choices=[], coerce=int,validators=[InputRequired()])
