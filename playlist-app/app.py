@@ -87,8 +87,20 @@ def add_song():
     - if valid: add playlist to SQLA and redirect to list-of-songs
     """
 
-    # ADD THE NECESSARY CODE HERE FOR THIS ROUTE TO WORK
+    #Get LOGIC
+    form = SongForm()
 
+    # POST LOGIC
+    if form.validate_on_submit():
+        song = Song(title=form.title.data,
+                    artist=form.artist.data,
+                    album=form.album.data)
+        db.session.add(song)
+        db.session.commit()
+        flash(f"Added song: {song.title} by {song.artist}")
+        return redirect("/songs")
+
+    return render_template("new_song.html", form=form)
 
 @app.route("/playlists/<int:playlist_id>/add-song", methods=["GET", "POST"])
 def add_song_to_playlist(playlist_id):
