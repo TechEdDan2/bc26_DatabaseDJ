@@ -70,7 +70,7 @@ def add_playlist():
                     description=form.description.data)
         db.session.add(playlist)
         db.session.commit()
-        flash(f"Added Playlist: {playlist.name} with a description of {playlist.description}")
+        flash(f"Added Playlist: {playlist.name} with a description of {playlist.description}", "success")
         return redirect("/playlists")
 
     return render_template("new_playlist.html", form=form)
@@ -114,13 +114,12 @@ def add_song():
                     album=form.album.data)
         db.session.add(song)
         db.session.commit()
-        flash(f"Added song: {song.title} by {song.artist}")
+        flash(f"Added song: {song.title} by {song.artist}", "success")
         return redirect("/songs")
 
     return render_template("new_song.html", form=form)
 
 @app.route("/playlists/<int:playlist_id>/add-song", methods=["GET", "POST"])
-
 def add_song_to_playlist(playlist_id):
     """Add a playlist and redirect to list."""
 
@@ -149,7 +148,7 @@ def add_song_to_playlist(playlist_id):
         new_playlist_song = PlaylistSong(playlist_id=playlist.id, song_id=song.id)
         db.session.add(new_playlist_song)
         db.session.commit()
-        flash(f"Added song: {song.title} to playlist: {playlist.name}")
+        flash(f"Added song: {song.title} to playlist: {playlist.name}", "success")
         # Redirect to the playlist detail page after adding the song
         return redirect(f"/playlists/{playlist_id}")
 
