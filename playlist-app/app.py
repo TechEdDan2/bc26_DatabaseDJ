@@ -128,16 +128,27 @@ def add_song_to_playlist(playlist_id):
     form = NewSongForPlaylistForm()
 
     # Restrict form to songs not already on this playlist
-
-    # curr_on_playlist = ...
-    # form.song.choices = ...
+    curr_playlist = [ps.song_id for ps in playlist.playlist_songs]
+    all_songs = Song.query.all()
+    remaining_songs = [song for song in all_songs if song.id not in curr_playlist]
+    # Dynamically set choices for the song field in the form 
+    form.song.choices = [(song.id, song.title) for song in remaining_songs]
 
     # POST LOGIC
     if form.validate_on_submit():
 
           # ADD THE NECESSARY CODE HERE FOR THIS ROUTE TO WORK
-
-          return redirect(f"/playlists/{playlist_id}")
+        song = Song.query.get(form.song.data)
+        if not song:
+            flash("Song not found.", "error")
+            return redirect(f"/playlists/{playlist_id}/add-song")
+            
+        new_playlist_song = PlaylistSong(playlist_id=playlist.id, song_id=song.id)
+        db.session.add(new_playlist_song)
+        db.session.commit()
+        flash(f"Added song: {song.title} to playlist: {playlist.name}")
+        # Redirect to the playlist detail page after adding the song
+        return redirect(f"/playlists/{playlist_id}")
 
     return render_template("add_song_to_playlist.html",
                              playlist=playlist,
