@@ -128,9 +128,12 @@ def add_song_to_playlist(playlist_id):
     form = NewSongForPlaylistForm()
 
     # Restrict form to songs not already on this playlist
-    curr_playlist = [ps.song_id for ps in playlist.playlist_songs]
+    # Get the current playlist's songs
+    curr_playlist_songs = [ps.song_id for ps in playlist.playlist_songs]
+    # Get all songs in the database
     all_songs = Song.query.all()
-    remaining_songs = [song for song in all_songs if song.id not in curr_playlist]
+    # Filter out songs that are already in the playlist with a list comprehension
+    remaining_songs = [song for song in all_songs if song.id not in curr_playlist_songs]
     # Dynamically set choices for the song field in the form 
     form.song.choices = [(song.id, song.title) for song in remaining_songs]
 
